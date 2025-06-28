@@ -23,7 +23,7 @@ const ItemsCard = ({ item }: { item: RoadmapItemType }) => {
         </CardHeader>
         <CardContent>
           <div className="text-sm text-slate-500">
-            Created On: {item.createdAt.toDateString()}
+            Created On: {new Date(item.createdAt).toDateString()}
           </div>
         </CardContent>
         <CardFooter>

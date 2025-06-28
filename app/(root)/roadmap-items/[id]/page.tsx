@@ -25,8 +25,8 @@ const SingleRoadmapItem = async ({ params }: { params: { id: string } }) => {
     upvotes: roadmapItem!.upvotes
       ? roadmapItem!.upvotes.map((id) => id.toString())
       : [],
-    createdAt: roadmapItem!.createdAt.toISOString(),
-    __v: roadmapItem!.__v.toString() as string,
+    createdAt: new Date(roadmapItem!.createdAt).toISOString(),
+    __v: roadmapItem!.__v,
   };
 
   const comments = await getAllCommentsByRoadmapItemId(id);

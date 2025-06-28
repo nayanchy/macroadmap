@@ -1,7 +1,9 @@
 import SingleProduct from "@/components/SingleProduct";
 import { getProductById } from "@/constants/data";
 
-const SingleProductPage = async ({ params }: { params: { id: string } }) => {
+type Props = { params: { id: string } };
+
+const SingleProductPage = async ({ params }: Props) => {
   const { id } = await params;
   const product = getProductById(Number(id));
 
