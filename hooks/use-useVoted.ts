@@ -22,7 +22,7 @@ const useUserVoted = (itemId: string): UseUserVotedResult => {
 
       const result = await userVoted(itemId);
 
-      setVoted(result.voted);
+      setVoted(result.voted !== undefined ? result.voted : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       setVoted(null);
