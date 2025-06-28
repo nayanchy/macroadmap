@@ -3,7 +3,6 @@ import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/Theme";
 import dbConnect from "@/lib/mongoose";
-import PageLoader from "@/components/PageLoader";
 import { Toaster } from "@/components/ui/sonner";
 
 const poppins = Poppins({
@@ -39,7 +38,6 @@ const RootLayout = async ({
           enableSystem
           disableTransitionOnChange
         >
-          <PageLoader />
           {children}
           <Toaster closeButton position="top-center" />
         </ThemeProvider>

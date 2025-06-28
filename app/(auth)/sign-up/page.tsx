@@ -1,11 +1,13 @@
 import SignUpForm from "@/components/forms/SignUpForm";
-import React from "react";
+import React, { Suspense } from "react";
 
 const SignUp = () => {
   return (
-    <div className="flex-center min-h-[100vh]">
-      <SignUpForm />
-    </div>
+    <Suspense>
+      <div className="flex-center min-h-[100vh]">
+        <SignUpForm />
+      </div>
+    </Suspense>
   );
 };
 

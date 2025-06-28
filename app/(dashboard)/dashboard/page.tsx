@@ -1,10 +1,15 @@
 import Dashboard from "@/components/Dashboard/Dashboard";
-import React from "react";
+import PageLoader from "@/components/PageLoader";
+import React, { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 const DashboardPage = () => {
   return (
     <div>
-      <Dashboard />
+      <Suspense fallback={<PageLoader />}>
+        <Dashboard />
+      </Suspense>
     </div>
   );
 };
