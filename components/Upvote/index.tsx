@@ -30,7 +30,7 @@ const Upvote = ({
     const isUserVoted = async () => {
       const result = await userVoted(itemId);
 
-      setIsUserVoted(result.voted);
+      setIsUserVoted(result.voted as boolean);
     };
 
     isUserVoted();

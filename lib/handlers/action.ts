@@ -1,7 +1,6 @@
 "use server";
 
 import { auth, signIn, signOut } from "@/auth";
-import { NextResponse } from "next/server";
 import { getSingleRoadmapItem } from "../queries/roadmaps";
 import { Comment } from "@/database/models/comment.model";
 import { CommentParameter } from "@/types/comments";
@@ -38,16 +37,16 @@ export async function handleUpvoteRoadmapItem(itemId: string) {
   const session = await auth();
 
   if (!session?.user) {
-    return new NextResponse("You are not logged in", { status: 401 });
+    console.log("User not logged in");
+    return;
   }
 
   const userId = session.user.id;
 
-  console.log("User ID:", userId);
-
   const item = await getSingleRoadmapItem(itemId);
   if (!item) {
-    return new NextResponse("Item not found", { status: 404 });
+    console.log("Item not found");
+    return;
   }
 
   const hasVoted = item.upvotes.some(
@@ -70,7 +69,7 @@ export async function handleUpvoteRoadmapItem(itemId: string) {
 export async function getUpvotes(itemId: string) {
   const item = await getSingleRoadmapItem(itemId);
   if (!item) {
-    return new NextResponse("Item not found", { status: 404 });
+    return { upvotes: 0, message: "Item not found" };
   }
   return { upvotes: item.upvotes.length };
 }
@@ -122,7 +121,7 @@ export async function userVoted(itemId: string) {
   const session = await auth();
 
   if (!session?.user) {
-    return new NextResponse("You are not logged in", { status: 401 });
+    return { success: false, message: "You are not logged in" };
   }
   const items = await getSingleRoadmapItem(itemId);
 
@@ -139,7 +138,8 @@ export async function userVoted(itemId: string) {
 export async function ifUserComment(commentId: string) {
   const session = await auth();
   if (!session?.user) {
-    return new NextResponse("You are not logged in", { status: 401 });
+    console.log("User not logged in");
+    return false;
   }
 
   const userId = session.user.id;
@@ -149,9 +149,7 @@ export async function ifUserComment(commentId: string) {
     userId,
   });
   if (!comment) {
-    return new NextResponse("You are not authorized to delete this comment", {
-      status: 403,
-    });
+    return false;
   }
   return true;
 }
