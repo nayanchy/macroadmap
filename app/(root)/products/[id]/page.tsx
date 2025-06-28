@@ -1,7 +1,7 @@
 import SingleProduct from "@/components/SingleProduct";
 import { getProductById } from "@/constants/data";
 
-type Props = { params: { id: string } };
+type Props = { params: Promise<{ id: string }> };
 
 const SingleProductPage = async ({ params }: Props) => {
   const { id } = await params;

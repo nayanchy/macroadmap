@@ -5,13 +5,11 @@ import { getRoadmapItemsSortedFiltered } from "@/lib/queries/filter";
 import { getRoadmapBySlug } from "@/lib/queries/roadmaps";
 import { notFound } from "next/navigation";
 
-const RoadmapSingle = async ({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { status?: string; sortBy?: string };
-}) => {
+interface Props {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ status?: string; sortBy?: string }>;
+}
+const RoadmapSingle = async ({ params, searchParams }: Props) => {
   const { slug } = await params;
   const roadmap = await getRoadmapBySlug(slug);
   const roadmapId = roadmap?._id;

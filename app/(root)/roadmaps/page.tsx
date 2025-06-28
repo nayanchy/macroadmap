@@ -4,7 +4,6 @@ import React from "react";
 
 const RoadmapsPage = async () => {
   const roadmaps = await getAllRoadmaps();
-  console.log(roadmaps);
   return (
     <div className="mx-auto py-5 sm:py-10 md:py-16">
       <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10">

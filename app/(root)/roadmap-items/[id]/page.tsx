@@ -5,7 +5,13 @@ import CommentClient from "@/components/CommentsDisplay/CommentClient";
 import { CommentDisplayType } from "@/types/global";
 import { notFound } from "next/navigation";
 
-const SingleRoadmapItem = async ({ params }: { params: { id: string } }) => {
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+const SingleRoadmapItem = async ({ params }: Props) => {
   const { id } = await params;
   const session = await auth();
   const currentUserId = session?.user?.id;
