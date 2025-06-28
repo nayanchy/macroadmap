@@ -6,7 +6,7 @@ import { RoadmapType } from "@/types/roadmap";
 
 export const GET = async (
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) => {
   await dbConnect();
   const { slug } = await params;
@@ -25,7 +25,7 @@ export const GET = async (
 
 export const POST = async (
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) => {
   await dbConnect();
 
