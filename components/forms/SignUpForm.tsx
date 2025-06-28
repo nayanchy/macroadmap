@@ -49,7 +49,13 @@ const SignUpForm = () => {
       });
 
       if (response.status === 201) {
-        router.push(ROUTES.signIn);
+        toast.success("Sign up successful! Redirecting to sign in...", {
+          duration: 2000,
+          position: "top-center",
+        });
+        setTimeout(() => {
+          router.push(ROUTES.signIn);
+        }, 2000);
       } else {
         const data = await response.json();
         setErrors({
