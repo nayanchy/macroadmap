@@ -1,6 +1,8 @@
 import { handleComment } from "@/lib/handlers/action";
+import { commentFormSchema } from "@/lib/schemas/form.schema";
 import { CommentDisplayType } from "@/types/global";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 const ReplyForm = ({
   roadmapItemId,
@@ -15,6 +17,7 @@ const ReplyForm = ({
 }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [reply, setReply] = useState<string>("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleReply = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,6 +27,18 @@ const ReplyForm = ({
     const parentId = formData.get("parentId");
 
     try {
+      const validatedReply = commentFormSchema.safeParse({
+        content: reply as string, // Ensure comment is a string
+      });
+
+      if (!validatedReply.success) {
+        const fieldErrors: { [key: string]: string } = {};
+        validatedReply.error.errors.forEach((error) => {
+          fieldErrors[error.path[0]] = error.message;
+        });
+        setErrors(fieldErrors);
+        return;
+      }
       const result = await handleComment({
         roadmapItemId,
         content: reply as string,
@@ -50,7 +65,16 @@ const ReplyForm = ({
         name="reply"
         onChange={(e) => setReply(e.target.value)}
         disabled={isReplying}
+        value={reply}
       />
+      {errors.general &&
+        toast(errors.general, {
+          position: "top-center",
+          duration: 5000,
+        })}
+      {errors.content && (
+        <p className="!text-red-500 text-sm mt-1">{errors.content}</p>
+      )}
       <button
         type="submit"
         className="px-4 py-1 bg-blue-500 text-white rounded disabled:opacity-50"

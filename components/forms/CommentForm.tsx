@@ -1,16 +1,9 @@
 "use client";
 import { handleComment } from "@/lib/handlers/action";
+import { commentFormSchema } from "@/lib/schemas/form.schema";
 import { CommentDisplayType } from "@/types/global";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
-
-const commentFormSchema = z.object({
-  content: z
-    .string()
-    .min(1, "Comment is required")
-    .max(300, "Comment cannot exceed 300 characters"),
-});
 
 const CommentForm = ({
   roadmapItemId,
@@ -63,7 +56,6 @@ const CommentForm = ({
       setErrors({ general: message });
     } finally {
       setPending(false);
-      setComment("");
     }
   };
   return (
