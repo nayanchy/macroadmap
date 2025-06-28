@@ -10,6 +10,7 @@ import { createUser } from "./lib/queries/users";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
+  trustHost: true,
   providers: [
     Google,
     GitHub,

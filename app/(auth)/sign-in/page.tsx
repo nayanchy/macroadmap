@@ -1,8 +1,5 @@
-"use client";
 import LoginForm from "@/components/forms/LoginForm";
 import { Suspense } from "react";
-
-export const dynamic = "force-dynamic";
 
 const SignIn = () => {
   return (

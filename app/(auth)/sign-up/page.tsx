@@ -1,5 +1,5 @@
 import SignUpForm from "@/components/forms/SignUpForm";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 
 const SignUp = () => {
   return (
