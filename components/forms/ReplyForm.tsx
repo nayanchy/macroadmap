@@ -39,6 +39,7 @@ const ReplyForm = ({
         setErrors(fieldErrors);
         return;
       }
+
       const result = await handleComment({
         roadmapItemId,
         content: reply as string,

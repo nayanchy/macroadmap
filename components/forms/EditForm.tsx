@@ -1,7 +1,9 @@
 import { editComment } from "@/lib/handlers/action";
+import { commentFormSchema } from "@/lib/schemas/form.schema";
 import { CommentDisplayType } from "@/types/global";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { toast } from "sonner";
 
 const EditForm = ({
   commentId,
@@ -15,10 +17,27 @@ const EditForm = ({
   setIsEditing: (state: boolean, commentId: string) => void;
 }) => {
   const [editedComment, setEditedComment] = useState<string>(initialComment);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const handleEditing = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const comment = formData.get("comment");
     setIsEditing(true, commentId);
     try {
+      const validatedComment = commentFormSchema.safeParse({
+        content: comment as string,
+      });
+
+      if (!validatedComment.success) {
+        const fieldErrors: { [key: string]: string } = {};
+
+        validatedComment.error.errors.forEach((error) => {
+          fieldErrors[error.path[0]] = error.message;
+        });
+        setErrors(fieldErrors);
+        return;
+      }
+
       const res = (await editComment(commentId, editedComment)) as {
         success: boolean;
         comment: CommentDisplayType;
@@ -26,15 +45,14 @@ const EditForm = ({
 
       if (!res.success) {
         throw new Error("Failed to edit comment");
-      }
-
-      if (onCommentEdit) {
-        onCommentEdit(res.comment);
+      } else {
+        setIsEditing(false, "");
+        if (onCommentEdit) {
+          onCommentEdit(res.comment);
+        }
       }
     } catch (error) {
       console.error("Error while editing:", error);
-    } finally {
-      setIsEditing(false, "");
     }
   };
 
@@ -49,6 +67,14 @@ const EditForm = ({
           onChange={(e) => setEditedComment(e.target.value)}
           value={editedComment}
         />
+        {errors.general &&
+          toast(errors.general, {
+            position: "top-center",
+            duration: 5000,
+          })}
+        {errors.content && (
+          <p className="!text-red-500 text-sm mt-1">{errors.content}</p>
+        )}
         <button
           type="submit"
           className="px-4 py-1 bg-primary-500 text-white rounded disabled:opacity-50"
