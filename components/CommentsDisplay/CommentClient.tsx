@@ -13,12 +13,14 @@ type Props = {
   roadmapItem: RoadmapItemType;
   initialComments: CommentDisplayType[];
   currentUserId: string;
+  userName: string;
 };
 
 const CommentClient = ({
   roadmapItem,
   initialComments,
   currentUserId,
+  userName,
 }: Props) => {
   const [comments, setComments] = useState(initialComments);
 
@@ -84,11 +86,13 @@ const CommentClient = ({
         onCommentPost={handleCommentPost}
         onCommentDelete={handleCommentDelete}
         onCommentEdit={handleCommentEdit}
+        userName={userName}
       />
 
       <CommentForm
         roadmapItemId={roadmapItem._id.toString()}
         onCommentPost={handleCommentPost}
+        userName={userName}
       />
     </div>
   );

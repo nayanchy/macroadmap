@@ -11,6 +11,7 @@ type CommentsDisplayProps = {
   onCommentPost: (comment: CommentDisplayType) => void;
   onCommentDelete: (commentId: string) => void | undefined;
   onCommentEdit: (comment: CommentDisplayType) => void | undefined;
+  userName?: string;
 };
 
 const CommentsDisplay = ({
@@ -20,6 +21,7 @@ const CommentsDisplay = ({
   onCommentPost,
   onCommentDelete,
   onCommentEdit,
+  userName,
 }: CommentsDisplayProps) => {
   const [replyTo, setReplyTo] = useState<string | null>(null);
 
@@ -35,6 +37,7 @@ const CommentsDisplay = ({
         replyTo={replyTo}
         onCommentDelete={onCommentDelete}
         onCommentEdit={onCommentEdit}
+        userName={userName}
       />
     </div>
   );

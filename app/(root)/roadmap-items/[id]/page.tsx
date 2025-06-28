@@ -9,6 +9,7 @@ const SingleRoadmapItem = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
   const session = await auth();
   const currentUserId = session?.user?.id;
+  const userName = session?.user?.name;
   const roadmapItem = await getSingleRoadmapItem(id);
 
   if (!roadmapItem) {
@@ -39,6 +40,7 @@ const SingleRoadmapItem = async ({ params }: { params: { id: string } }) => {
       roadmapItem={roadmapItemFormatted}
       initialComments={comments as CommentDisplayType[]}
       currentUserId={currentUserId as string}
+      userName={userName as string}
     />
   );
 };

@@ -17,4 +17,5 @@ export type CommentThreadProps = {
   level?: number;
   setReplyTo: (id: string | null) => void;
   replyTo: string | null;
+  userName?: string;
 };

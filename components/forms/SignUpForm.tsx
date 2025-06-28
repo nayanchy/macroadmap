@@ -4,17 +4,42 @@ import SocialLogin from "./SocialLogin";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
+import { z } from "zod";
+import { useState } from "react";
+import { toast } from "sonner";
+
+const signUpSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+});
 
 const SignUpForm = () => {
   const router = useRouter();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const formData = new FormData(e.currentTarget);
-      const name = formData.get("name");
-      const email = formData.get("email");
-      const password = formData.get("password");
 
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    const result = signUpSchema.safeParse({
+      name,
+      email,
+      password,
+    });
+
+    if (!result.success) {
+      const fieldErrors: { [key: string]: string } = {};
+      result.error.errors.forEach((error) => {
+        fieldErrors[error.path[0]] = error.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+    try {
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
@@ -25,9 +50,15 @@ const SignUpForm = () => {
 
       if (response.status === 201) {
         router.push(ROUTES.signIn);
+      } else {
+        const data = await response.json();
+        setErrors({
+          general: data.meessage || "An error occurred during sign up",
+        });
       }
     } catch (err) {
-      console.log(err);
+      setErrors({ general: "Something went wrong. Please try again later." });
+      console.error("Sign up error:", err);
     }
   };
   return (
@@ -57,6 +88,9 @@ const SignUpForm = () => {
                 className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                 placeholder="Your Name"
               />
+              {errors.name && (
+                <p className="!text-red-500 text-sm mt-1">{errors.name}</p>
+              )}
             </div>
             <div className="w-full max-w-sm min-w-[200px]">
               <label
@@ -71,6 +105,9 @@ const SignUpForm = () => {
                 className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                 placeholder="Your Email"
               />
+              {errors.email && (
+                <p className="!text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
             <div className="w-full max-w-sm min-w-[200px]">
               <label
@@ -85,8 +122,12 @@ const SignUpForm = () => {
                 className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                 placeholder="Your Password"
               />
+              {errors.password && (
+                <p className="!text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
           </div>
+          {errors.general && toast(errors.general)}
           <button
             className="mt-4 w-full rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="submit"

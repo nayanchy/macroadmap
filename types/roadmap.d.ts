@@ -16,7 +16,7 @@ export interface RoadmapItemType {
   description: string;
   status: string;
   upvotes: string[];
-  createdAt: Date;
+  createdAt: Date | string;
   __v: number;
 }
 

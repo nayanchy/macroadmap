@@ -111,7 +111,10 @@ export async function handleComment({
     return { success: true, comment: plainComment };
   } catch (err) {
     const message = err instanceof Error ? err.message : (err as string);
-    throw new Error(message);
+    return {
+      success: false,
+      message,
+    };
   }
 }
 

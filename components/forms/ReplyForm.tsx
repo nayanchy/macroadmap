@@ -6,10 +6,12 @@ const ReplyForm = ({
   roadmapItemId,
   onCommentPost,
   commentId,
+  userName,
 }: {
   roadmapItemId: string;
   onCommentPost: (comment: CommentDisplayType) => void;
   commentId: string;
+  userName?: string;
 }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [reply, setReply] = useState<string>("");
@@ -28,10 +30,8 @@ const ReplyForm = ({
         parentId: parentId as string,
       });
 
-      console.log(result);
-
       if (result?.success && result?.comment) {
-        onCommentPost(result.comment);
+        onCommentPost({ ...result.comment, userName });
         setReply("");
       }
     } catch (err) {

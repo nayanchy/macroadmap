@@ -12,7 +12,7 @@ const CommentDeleteEdit = ({
 }: {
   id: string;
   onCommentDelete: (id: string) => void;
-  setIsEditing: (state: boolean) => void;
+  setIsEditing: (state: boolean, commentId: string) => void;
 }) => {
   const handleDelete = () => {
     toast("Do you really want to delete this comment?", {
@@ -31,7 +31,7 @@ const CommentDeleteEdit = ({
   };
 
   const handleEditingState = () => {
-    setIsEditing(true);
+    setIsEditing(true, id);
   };
   return (
     <div className="flex gap-4">

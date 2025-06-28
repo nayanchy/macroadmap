@@ -16,11 +16,18 @@ const CommentThread = ({
   replyTo,
   onCommentDelete,
   onCommentEdit,
+  userName,
 }: CommentThreadProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState({
+    state: true as boolean,
+    commentId: "" as string,
+  });
 
-  const handleEditing = (state: boolean) => {
-    setIsEditing(state);
+  const handleEditing = (state: boolean, commentId: string) => {
+    setIsEditing({
+      state,
+      commentId,
+    });
   };
 
   const filtered = comments.filter((c) => (c.parentId ?? null) === parentId);
@@ -38,10 +45,10 @@ const CommentThread = ({
             className={`mt-4 ml-${level * 4} bg-gray-50 rounded-lg shadow p-4`}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold text-blue-700">
+              <span className="font-semibold text-primary-500">
                 {comment.userName || "User"}
                 {comment.userId === currentUserId && (
-                  <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">
+                  <span className="ml-2 px-2 py-0.5 bg-orange-100 text-primary-500 text-xs rounded">
                     You
                   </span>
                 )}
@@ -55,7 +62,7 @@ const CommentThread = ({
               <div className="flex gap-2">
                 {level < allowedCommentLevel && (
                   <button
-                    className="text-sm text-blue-600 cursor-pointer hover:underline"
+                    className="text-sm text-primary-500 cursor-pointer hover:underline"
                     onClick={() =>
                       setReplyTo(replyTo === comment._id ? null : comment._id)
                     }
@@ -87,10 +94,11 @@ const CommentThread = ({
                     onCommentPost(newComment);
                     setReplyTo(null);
                   }}
+                  userName={userName}
                 />
               </div>
             )}
-            {isEditing && (
+            {isEditing.state && isEditing.commentId === comment._id && (
               <div className="mt-3">
                 <EditForm
                   commentId={comment._id}
