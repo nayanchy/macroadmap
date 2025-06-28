@@ -20,14 +20,18 @@ const checkIfPublicRoute = (pathname: string): boolean => {
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
   const session = await auth();
-  console.log(session);
-  console.log("Middleware");
 
   const isAuthenticated = !!session?.user;
 
   const isPublicRoute = checkIfPublicRoute(nextUrl.pathname);
 
-  console.log(isAuthenticated, isPublicRoute);
+  const isLoginSignUpRoute =
+    nextUrl.pathname === PUBLIC_ROUTES.login ||
+    nextUrl.pathname === PUBLIC_ROUTES.register;
+
+  if (isAuthenticated && isLoginSignUpRoute) {
+    return NextResponse.redirect(new URL("/", nextUrl));
+  }
 
   if (!isAuthenticated && !isPublicRoute) {
     const callbackUrl = encodeURIComponent(nextUrl.pathname + nextUrl.search);

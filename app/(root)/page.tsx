@@ -10,8 +10,6 @@ import { AiOutlineUserAdd, AiOutlineUser } from "react-icons/ai";
 const Home = async () => {
   const session = await auth();
 
-  console.log(session);
-
   return (
     <div className="min-h-[calc(100vh-84px)]">
       <h1 className="text-3xl font-bold flex-center">
