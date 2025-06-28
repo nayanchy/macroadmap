@@ -5,21 +5,48 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { z } from "zod";
+import { useState } from "react";
+
+const signInFormSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(4, "Password must be at least 6 characters long"),
+});
 
 const LoginForm = () => {
   const router = useRouter();
   const callbackUrl = useSearchParams().get("callbackUrl") || "/";
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget);
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      const result = signInFormSchema.safeParse({
+        email,
+        password,
+      });
+
+      if (!result.success) {
+        const fieldErrors: { [key: string]: string } = {};
+        result.error.errors.forEach((error) => {
+          fieldErrors[error.path[0]] = error.message;
+        });
+        setErrors(fieldErrors);
+        return;
+      }
       formData.append("callbackUrl", callbackUrl);
       const response = await handleCredLogin(formData);
 
       if (response.error) {
         console.log(response.error);
       } else {
+        setLoading(false);
         router.push(callbackUrl);
       }
     } catch (error) {
@@ -54,6 +81,9 @@ const LoginForm = () => {
                 placeholder="Your Email"
               />
             </div>
+            {errors.email && (
+              <p className="!text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
             <div className="w-full max-w-sm min-w-[200px]">
               <label
                 className="block mb-2 text-sm text-slate-600"
@@ -68,11 +98,23 @@ const LoginForm = () => {
                 placeholder="Your Password"
               />
             </div>
+            {errors.password && (
+              <p className="!text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
 
-          <Button type="submit" className="w-full mt-4">
-            Sign In
-          </Button>
+          {loading ? (
+            <Button disabled className="w-full mt-4" asChild>
+              <div className="flex items-center justify-center space-x-2">
+                <span className="w-4 h-4 border-2 border-gray-200 border-t-orange-500 rounded-full animate-spin"></span>
+                Signing In
+              </div>
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full mt-4">
+              Sign In
+            </Button>
+          )}
         </form>
       </div>
       <SocialLogin type="signin" />
