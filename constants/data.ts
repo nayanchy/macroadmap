@@ -1,30 +1,3 @@
-export const users = [
-  {
-    email: "a@b.com",
-    password: "123456",
-  },
-  {
-    email: "c@d.com",
-    password: "123456",
-  },
-  {
-    email: "e@f.com",
-    password: "123456",
-  },
-  {
-    email: "g@h.com",
-    password: "123456",
-  },
-  {
-    email: "i@j.com",
-    password: "password1234",
-  },
-];
-
-export const getUserByEmail = (email: string) => {
-  return users.find((user) => user.email === email);
-};
-
 export const products = [
   {
     id: 1,
@@ -124,10 +97,6 @@ export const navItems = [
   {
     title: "Contact",
     href: "/contact",
-  },
-  {
-    title: "Shop",
-    href: "/products",
   },
 ];
 
