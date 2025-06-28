@@ -18,7 +18,7 @@ export async function getAllCommentsByRoadmapItemId(itemId: string) {
         userId: userIdStr,
         content: comment.content,
         parentId: comment.parentId ? comment.parentId.toString() : null,
-        createdAt: comment.createdAt.toISOString(),
+        createdAt: new Date(comment.createdAt).toISOString(),
         userName,
       };
     })
