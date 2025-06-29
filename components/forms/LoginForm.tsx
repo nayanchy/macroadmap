@@ -38,6 +38,7 @@ const LoginForm = () => {
           fieldErrors[error.path[0]] = error.message;
         });
         setErrors(fieldErrors);
+        setLoading(false);
         return;
       }
       formData.append("callbackUrl", callbackUrl);
